@@ -8,6 +8,7 @@ const incomes = document.querySelector('#incomes-container');
 const expenses = document.querySelector('#expenses-container');
 const savings = document.querySelector('#savings-container');
 const formSubmit = document.querySelector('#transactionForm .btn-primary');
+const addModal = document.getElementById('addModal');
 // events
 
 // classes
@@ -17,18 +18,40 @@ class Report{
         this.expenses = expenses;
         this.savings = savings;
         this.total = incomes - expenses - savings;
+        this.transactionsList = [];
+    }
+    addTransaction(type, amount) {
+        if (type === 'income'){
+            this.incomes += Number(amount);
+        } else if (type === 'expense'){
+            this.expenses += Number(amount);
+        } else if (type ==='savings'){
+            this.savings += Number(amount)
+        }
+        this.total = this.incomes - this.expenses - this.savings;
+        ui.displayData(this.incomes, this.expenses, this.savings, this.total);
     }
 }
 
 class Transaction {
-    constructor(type, amount, description) {
+    constructor(type, amount, description, id) {
         this.type = type;
         this.amount = amount;
         this.description = description;
+        this.id = id;
+    }
+    registerTransaction(transaction){
+        report.transactionsList.push(transaction);
+        console.log(report.transactionsList)
+
     }
 }
 class UI{
-    displayInitialData(income, expenses, savings, total) {
+    displayData(income, expenses, savings, total) {
+        incomeDisplay.textContent = ``
+        expenseDisplay.textContent = ``
+        savingDisplay.textContent = ``
+        totalDisplay.textContent = ``
         incomeDisplay.textContent = `$${income}`
         expenseDisplay.textContent = `$${expenses}`
         savingDisplay.textContent = `$${savings}`
@@ -47,7 +70,7 @@ console.log(ui);
 eventListeners()
 
 function eventListeners() {
-    document.addEventListener('DOMContentLoaded', ui.displayInitialData(report.incomes, report.expenses, report.savings, report.total));
+    document.addEventListener('DOMContentLoaded', ui.displayData(report.incomes, report.expenses, report.savings, report.total));
     document.addEventListener('DOMContentLoaded', getFormData)
     formSubmit.addEventListener('click', verifyTransaction)
 }
@@ -119,12 +142,24 @@ function verifyTransaction(e) {
                 if (document.querySelector('.error')){
                     document.querySelector('.error').remove()
                 }
-                const transaction = new Transaction(type, amount, description);
-                console.log(transaction);
+                registerTransaction(type, amount, description);
             }
         } else {
-            const transaction = new Transaction(type, amount, description);
-            console.log(transaction);
+            registerTransaction(type, amount, description);
         }
     }
+}
+function registerTransaction(type, amount, description){
+    addModal.style.display = 'none';
+    report.addTransaction(type, amount);
+    const transaction = new Transaction(type, amount, description, Date.now())
+    transaction.registerTransaction(transaction);
+    clearFields();
+}
+
+function clearFields(){
+    document.querySelector('#input1').value = '';
+    document.querySelector('#input2').value = '';
+    document.querySelector('.type-selector .active').classList.remove('active');
+    document.querySelector('.btn-primary').classList.add('disabled');
 }
