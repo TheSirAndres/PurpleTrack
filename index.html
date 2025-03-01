@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PurpleTrack - Money Tracker</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="header">
+        <button class="menu-btn">☰</button>
+        <h1>PurpleTrack</h1>
+        <div></div>
+    </header>
+    <div class="toggle-menu hidden" id="toggleMenu">
+        <div class="toggle-menu-container">
+            <p>actual currency: $</p>
+            <p>actual user: No user</p>
+        </div>
+    </div>
+    <div class="container">
+        <div class="reports" id="reports">
+            <h2>Reports</h2>
+            <div class="reports-container">
+                <Div class="report-box income-box" id="income-box">
+                    <h3>Income:</h3>
+                    <p></p>
+                </Div>
+                <Div class="report-box expense-box" id="expense-box">
+                    <h3>Expenses:</h3>
+                    <p></p>
+                </Div>
+                <Div class="report-box total-box" id="total-box">
+                    <div class="savings">
+                        <h3>Savings:</h3>
+                        <p id="saving-display"></p>
+                    </div>
+                    <div class="total">
+                        <h3>Money left:</h3>
+                        <p id="total-display"></p>
+                    </div>
+                </Div>
+            </div>
+        </div>
+        <div class="transactions-list" id="transactionsList">
+            <div id="incomes-container">
+                <h3>incomes</h3>
+            </div>
+            <div id="expenses-container">
+                <h3>expenses</h3>
+            </div>
+            <div id="savings-container">
+                <h3>savings</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="fab" id="fab">
+        <i class="fas fa-plus"></i>
+    </div>
+
+    <div class="modal" id="addModal">
+        <div class="modal-content">
+            <button class="close-btn" id="closeModal">×</button>
+            <h2>Add Transaction</h2>
+            <form id="transactionForm">
+                <div class="input-group">
+                    <label>Amount</label>
+                    <input type="number" step="0.01" id="input1"required>
+                </div>
+                <div class="input-group">
+                    <label>Description</label>
+                    <input type="text" required id="input2">
+                </div>
+                <div class="input-group">
+                    <label>Type</label>
+                    <div class="type-selector">
+                        <button type="button" class="type-btn income-selector" data-type="income">
+                            💵 Income
+                        </button>
+                        <button type="button" class="type-btn expense-selector" data-type="expense">
+                            🛒 Expense
+                        </button>
+                        <button type="button" class="type-btn saving-selector" data-type="savings">
+                            🏛 Savings
+                        </button>
+                    </div>
+                </div>
+                <button type="submit" class="btn-primary disabled">Add</button>
+            </form>
+        </div>
+    </div>
+    <div id="tutorial-modal" class="modal-t hidden">
+        <div class="tutorial-content">
+            <h2 id="tutorial-step-title"></h2>
+            <p id="tutorial-step-description"></p>
+            <button id="continue-button">Continue</button>
+        </div>
+    </div>
+
+    <script src="js/script.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
