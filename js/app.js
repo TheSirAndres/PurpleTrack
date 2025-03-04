@@ -4,9 +4,9 @@ const incomeDisplay = document.querySelector('#income-box p');
 const expenseDisplay = document.querySelector('#expense-box p');
 const savingDisplay = document.querySelector('#saving-display');
 const totalDisplay = document.querySelector('#total-display');
-const incomes = document.querySelector('#incomes-container');
-const expenses = document.querySelector('#expenses-container');
-const savings = document.querySelector('#savings-container');
+const incomes = document.querySelector('#incomes-display');
+const expenses = document.querySelector('#expenses-display');
+const savings = document.querySelector('#savings-display');
 const formSubmit = document.querySelector('#transactionForm .btn-primary');
 const addModal = document.getElementById('addModal');
 // events
@@ -31,6 +31,17 @@ class Report{
         this.total = this.incomes - this.expenses - this.savings;
         ui.displayData(this.incomes, this.expenses, this.savings, this.total);
     }
+    updateTransaction(type, amount) {
+        if (type === 'income'){
+            this.incomes -= Number(amount);
+        } else if (type === 'expense'){
+            this.expenses -= Number(amount);
+        } else if (type ==='savings'){
+            this.savings -= Number(amount);
+        }
+        this.total = this.incomes - this.expenses - this.savings;
+        ui.displayData(this.incomes, this.expenses, this.savings, this.total);
+}
 }
 
 class Transaction {
@@ -43,6 +54,7 @@ class Transaction {
     registerTransaction(transaction){
         report.transactionsList.push(transaction);
         console.log(report.transactionsList)
+        ui.displayTransactions(report.transactionsList);
 
     }
 }
@@ -56,6 +68,50 @@ class UI{
         expenseDisplay.textContent = `$${expenses}`
         savingDisplay.textContent = `$${savings}`
         totalDisplay.textContent = `$${total}`
+    }
+    displayTransactions(transactions) {
+        // Clear the existing transactions
+        incomes.innerHTML = '';
+        expenses.innerHTML = '';
+        savings.innerHTML = '';
+        transactions.forEach(transaction => {
+            // Create a new div for the transaction
+            const transactionDiv = document.createElement('div');
+            transactionDiv.setAttribute('id', transaction.id);
+            transactionDiv.classList.add('transaction');
+            // Create the description and amount elements
+            const description = document.createElement('span');
+            description.textContent = `${transaction.description}: $${transaction.amount}`;
+
+            // Create the delete button
+            const deleteButton = document.createElement('button');
+            deleteButton.textContent = 'x';
+            deleteButton.classList.add('button-3');
+            deleteButton.onclick = function() {
+                // Remove the transaction from the DOM
+                transactionDiv.remove();
+                // remove from the transactions from the Array
+                report.transactionsList = report.transactionsList.filter(t => t.id!== transaction.id);
+                // Update the report
+                report.updateTransaction(transaction.type, transaction.amount);
+            };
+
+            // Append the description and delete button to the transaction div
+            transactionDiv.appendChild(description);
+            transactionDiv.appendChild(deleteButton);
+
+            // Append the transaction div to the appropriate section
+            if (transaction.type === 'income') {
+                transactionDiv.classList.add('income-transaction');
+                incomes.appendChild(transactionDiv);
+            } else if (transaction.type === 'expense') {
+                transactionDiv.classList.add('expense-transaction');
+                expenses.appendChild(transactionDiv);
+            } else {
+                transactionDiv.classList.add('savings-transaction');
+                savings.appendChild(transactionDiv);
+            }
+        });
     }
 }
 
